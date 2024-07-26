@@ -1,0 +1,16 @@
+{
+  "name": "trazas.andreani",
+  "version": "1.0.0",
+  "description": "busca tarzas de un envio Andreani",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.3.5"
+  },
+  "dependencies": {
+  }
+}

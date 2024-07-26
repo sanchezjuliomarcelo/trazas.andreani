@@ -1,7 +1,7 @@
 document.querySelector('#numeroAndreaniForm').addEventListener('submit', async (event) => {
     event.preventDefault();
   
-    const user = import.meta.env.VITE_API_USER; 
+    const user = import.meta.env.VITE_API_USER;
     const password = import.meta.env.VITE_API_PASSWORD;
     const credentials = btoa(`${user}:${password}`);
   
@@ -18,7 +18,7 @@ document.querySelector('#numeroAndreaniForm').addEventListener('submit', async (
       sessionStorage.setItem("x-authorization-token", data.token);
   
       const numeroAndreani = document.querySelector('.numeroAndreani').value;
-      
+  
       const $loader = document.getElementById("loader");
       $loader.style.display = 'block';
       const $cargando = document.getElementById("cargando");
@@ -72,5 +72,4 @@ document.querySelector('#numeroAndreaniForm').addEventListener('submit', async (
       $cargando.style.display = 'none';
     }
   });
-  
   
