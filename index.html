@@ -19,40 +19,38 @@
         <div class="col-lg-8 col-md-6">
           <h1 class="display-4 pl-4">Traza de envío</h1>
           <p class="lead pl-4">
-            Ingrese a continuación el código de tracking para realizar la consulta
+            Ingrese a continuación el código de tracking para realizar la
+            consulta
           </p>
           <br />
         </div>
         <div class="col-lg-4 col-md-6">
-          <img class="logo-andreani" src="img/isologo-vector.svg" style="width: 200px; height: auto; float: right; padding: 15px" />
-          <br />
+          <img class="logo-andreani" src="img/isologo-vector.svg"
+            style="width: 200px; height: auto; float: right; padding: 15px" /><br />
         </div>
       </div>
       <form id="numeroAndreaniForm">
         <div class="input-group">
           <span class="input-group-addon"><i class="bi bi-box-seam"></i></span>
-          <input id="numeroAndreani" type="text" class="form-control numeroAndreani" aria-label="Consulta numeroAndreani" placeholder="Número de envío" required />
+          <input id="numeroAndreani" type="text" class="form-control numeroAndreani"
+            aria-label="Consulta numeroAndreani" placeholder="Número de envío" required />
           <span class="input-group-addon icon-check"><i class="fa fa-check"></i></span>
           <span class="input-group-addon icon-remove"><i class="fa fa-remove"></i></span>
-          <button class="boton-buscador" type="submit" value="Submit">Buscar</button>
+          <button class="boton-buscador" type="submit" value="Submit">
+            Buscar
+          </button>
         </div>
       </form>
     </div>
   </div>
-
   <div class="container">
-    <div id="loader" style="display: none;"></div>
-    <div id="cargando" style="display: none;">Buscando...</div>
+    <div id="loader" style="display: none"></div>
+    <div id="cargando" style="display: none">Buscando...</div>
     <div id="infonumeroAndreani">
-      <!-- Aquí se mostrará la información de los eventos -->
+      <!-- local para inserción de eventos -->
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.12/jquery.mask.min.js"></script>
   <script type="module" src="script.js"></script>
 </body>
 
