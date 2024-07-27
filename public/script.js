@@ -1,5 +1,5 @@
-// URL de la API fija
-const API_URL = "https://apis.andreani.com";
+// URL de la API del backend
+const BACKEND_URL = "https://<YOUR_BACKEND_PROJECT>.vercel.app/api";
 
 // Función para obtener el valor de los campos de usuario y contraseña
 function getCredentials() {
@@ -18,29 +18,23 @@ async function getToken() {
         return;
     }
 
-    const credentials = btoa(`${user}:${password}`);
-    const apiUrl = `${API_URL}/login`;
-
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Basic ${credentials}`);
-
-    const requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-    };
-
     try {
-        const response = await fetch(apiUrl, requestOptions);
+        const response = await fetch(`${BACKEND_URL}/token`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Basic ${btoa(`${user}:${password}`)}`
+            }
+        });
+
         if (!response.ok) {
             throw new Error(`Error al obtener el token: ${response.status} ${response.statusText}`);
         }
+
         const result = await response.json();
         localStorage.setItem('authToken', result.token); // Almacena el token
         console.log('Token generado:', result.token); // Imprime el token
     } catch (error) {
         console.error('Error al obtener el token:', error);
-        // Puedes mostrar un mensaje de error al usuario
         alert("Error al autenticarse con la API de Andreani. Verifica tus credenciales.");
     }
 }
@@ -53,21 +47,17 @@ async function fetchTrackingData(trackingNumber) {
         return;
     }
 
-    const apiUrl = `${API_URL}/envios/${trackingNumber}/trazas`;
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
-
-    const requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-    };
-
     try {
-        const response = await fetch(apiUrl, requestOptions);
+        const response = await fetch(`${BACKEND_URL}/envios/${trackingNumber}/trazas`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
         const contentType = response.headers.get("content-type");
         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-        
+
         if (contentType && contentType.includes("application/json")) {
             const result = await response.json();
             displayTrackingData(result);
