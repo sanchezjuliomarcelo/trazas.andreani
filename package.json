@@ -1,19 +1,11 @@
 {
-  "name": "trazas.andreani",
-  "version": "1.0.0",
-  "description": "busca tarzas de un envio Andreani",
-  "main": "index.html",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^5.3.5",
-    "vite-plugin-mock": "^3.0.2"
-  },
-  "dependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
-    "http-proxy-middleware": "^3.0.0"
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "deploy": "netlify deploy" 
   }
 }
+
