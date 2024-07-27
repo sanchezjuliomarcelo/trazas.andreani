@@ -10,12 +10,13 @@ console.log("API_URL:", API_URL);
 
 // Función para generar el token
 async function getToken() {
-    // Verifica si las credenciales existen (puedes comentar esta parte después)
+    // Verifica si las credenciales existen
     if (!API_USER || !API_PASSWORD) {
         console.error("Las credenciales de acceso no están configuradas.");
         return;
     }
 
+    // Codifica las credenciales en Base64
     const credentials = btoa(`${API_USER}:${API_PASSWORD}`);
     const apiUrl = `${API_URL}/login`;
 
@@ -29,16 +30,17 @@ async function getToken() {
     };
 
     try {
+        // Realiza la solicitud para obtener el token
         const response = await fetch(apiUrl, requestOptions);
         if (!response.ok) {
             throw new Error(`Error al obtener el token: ${response.status} ${response.statusText}`);
         }
         const result = await response.json();
-        localStorage.setItem('authToken', result.token); // Almacena el token
+        localStorage.setItem('authToken', result.token); // Almacena el token en localStorage
         console.log('Token generado:', result.token); // Imprime el token
     } catch (error) {
         console.error('Error al obtener el token:', error);
-        // Puedes mostrar un mensaje de error al usuario
+        // Muestra un mensaje de error al usuario
         alert("Error al autenticarse con la API de Andreani. Verifica tus credenciales.");
     }
 }
@@ -51,8 +53,8 @@ async function fetchTrackingData(trackingNumber) {
         return;
     }
 
-    // Usa el endpoint correcto (con proxy si está configurado)
-    const apiUrl = `/api/v2/envios/${trackingNumber}/trazas`;
+    // Construye la URL de la API usando el número de seguimiento
+    const apiUrl = `${API_URL}/envios/${trackingNumber}/trazas`;
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
 
@@ -63,10 +65,19 @@ async function fetchTrackingData(trackingNumber) {
     };
 
     try {
+        // Realiza la solicitud para obtener los datos de la traza
         const response = await fetch(apiUrl, requestOptions);
+        const contentType = response.headers.get("content-type");
         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-        const result = await response.json();
-        displayTrackingData(result);
+        
+        // Verifica el tipo de contenido de la respuesta
+        if (contentType && contentType.includes("application/json")) {
+            const result = await response.json();
+            displayTrackingData(result); // Muestra los datos de la traza
+        } else {
+            const text = await response.text();
+            throw new Error(`Respuesta inesperada: ${text}`);
+        }
     } catch (error) {
         console.error('Error al obtener la traza:', error);
     }
@@ -109,4 +120,3 @@ document.getElementById("numeroAndreaniForm").addEventListener("submit", async f
 
 // Ejecuta la función para obtener el token cuando se cargue la página
 window.addEventListener('load', getToken);
-
