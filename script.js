@@ -1,95 +1,78 @@
-// Espera a que el DOM esté completamente cargado
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('#numeroAndreaniForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-  
-      // Asegúrate de que import.meta.env esté disponible
-      if (!import.meta.env || !import.meta.env.VITE_API_USER) {
-        console.error('Las variables de entorno no están disponibles.');
-        alert('Error de configuración. Las variables de entorno no están disponibles.');
-        return;
-      }
-  
-      const user = import.meta.env.VITE_API_USER;
-      const password = import.meta.env.VITE_API_PASSWORD;
-      const credentials = btoa(`${user}:${password}`);
+// script.js
 
-        console.log('VITE_API_USER:', import.meta.env.VITE_API_USER);
-        console.log('VITE_API_PASSWORD:', import.meta.env.VITE_API_PASSWORD);
-        console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+document.getElementById('numeroAndreaniForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-  
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${credentials}`,
-          },
+    const trackingNumber = document.getElementById('numeroAndreani').value;
+    const loader = document.getElementById('loader');
+    const cargando = document.getElementById('cargando');
+    const infonumeroAndreani = document.getElementById('infonumeroAndreani');
+
+    // Mostrar loader y mensaje de búsqueda
+    loader.style.display = 'block';
+    cargando.style.display = 'block';
+
+    try {
+        const response = await fetch(`/api/v2/envios/${trackingNumber}/trazas`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Basic ${btoa(`${import.meta.env.VITE_API_USER}:${import.meta.env.VITE_API_PASSWORD}`)}`,
+            },
         });
-  
+
         if (!response.ok) {
-          throw new Error(`Error al solicitar el token: ${response.statusText}`);
+            throw new Error('Error en la solicitud de la API');
         }
-  
+
         const data = await response.json();
-        sessionStorage.setItem("x-authorization-token", data.token);
-  
-        const numeroAndreani = document.querySelector('.numeroAndreani').value;
-  
-        document.getElementById("loader").style.display = 'block';
-        document.getElementById("cargando").style.display = 'block';
-        document.getElementById("infonumeroAndreani").style.display = 'none';
-  
-        const enviosResponse = await fetch(`${import.meta.env.VITE_API_URL}/v2/envios/${numeroAndreani}/trazas`, {
-          method: 'GET',
-          headers: {
-            'x-authorization-token': sessionStorage.getItem('x-authorization-token'),
-          },
+
+        // Limpiar el contenido anterior
+        infonumeroAndreani.innerHTML = '';
+
+        // Ocultar loader y mensaje de búsqueda
+        loader.style.display = 'none';
+        cargando.style.display = 'none';
+
+        if (data.eventos.length === 0) {
+            infonumeroAndreani.innerHTML = '<div class="alert alert-warning" role="alert">No se encontraron eventos para el número de seguimiento proporcionado.</div>';
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.className = 'table table-striped';
+
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+            <tr>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Traducción</th>
+                <th>Sucursal</th>
+                <th>Ciclo</th>
+            </tr>
+        `;
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        data.eventos.forEach(evento => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${new Date(evento.Fecha).toLocaleString()}</td>
+                <td>${evento.Estado}</td>
+                <td>${evento.Traduccion || ''}</td>
+                <td>${evento.Sucursal}</td>
+                <td>${evento.Ciclo}</td>
+            `;
+            tbody.appendChild(row);
         });
-  
-        if (!enviosResponse.ok) {
-          throw new Error(`Error al obtener la traza: ${enviosResponse.statusText}`);
-        }
-  
-        const enviosData = await enviosResponse.json();
-        let infonumeroAndreani = "";
-  
-        if (!enviosData.Estado) {
-          exibeIcone("remove");
-          infonumeroAndreani += `
-          <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            Número de envío inexistente.
-          </div>`;
-        } else {
-          exibeIcone("check");
-          infonumeroAndreani += `
-          <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="alert-heading">${enviosData.Estado}</h4>
-            <hr>
-            <p class="m-0"><strong>Fecha: </strong>${enviosData.Fecha}</p>
-            <p class="m-0"><strong>Código de estado: </strong>${enviosData.EstadoId}</p>
-            <p class="m-0"><strong>Traducción: </strong>${enviosData.Traduccion}</p>
-            <p class="m-0"><strong>Sucursal: </strong>${enviosData.Sucursal}</p>
-            <p class="m-0"><strong>Ciclo: </strong>${enviosData.Ciclo}</p>
-          </div>`;
-        }
-  
-        document.querySelector("#infonumeroAndreani").innerHTML = infonumeroAndreani;
-      } catch (error) {
-        console.error(error);
-        alert('Error al realizar la consulta. Por favor, intente de nuevo más tarde.');
-      } finally {
-        document.getElementById("loader").style.display = 'none';
-        document.getElementById("cargando").style.display = 'none';
-      }
-    });
-  });
-  
+
+        table.appendChild(tbody);
+        infonumeroAndreani.appendChild(table);
+
+    } catch (error) {
+        console.error('Error al obtener la traza:', error);
+        loader.style.display = 'none';
+        cargando.style.display = 'none';
+        infonumeroAndreani.innerHTML = '<div class="alert alert-danger" role="alert">Error al obtener la traza. Por favor, intenta nuevamente.</div>';
+    }
+});
