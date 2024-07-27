@@ -19,6 +19,16 @@
       <div class="row">
         <div class="col-lg-8 col-md-6">
           <h1 class="display-4 pl-4">Trazas de envío</h1>
+          <div class="form-group row">
+            <label for="apiUser" class="col-sm-2 col-form-label">Usuario</label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control" id="apiUser" placeholder="Usuario">
+            </div>
+            <label for="apiPassword" class="col-sm-2 col-form-label">Contraseña</label>
+            <div class="col-sm-4">
+              <input type="password" class="form-control" id="apiPassword" placeholder="Contraseña">
+            </div>
+          </div>
           <p class="lead pl-4">
             Ingrese a continuación el código de tracking para realizar la
             consulta
@@ -37,7 +47,7 @@
             aria-label="Consulta numeroAndreani" placeholder="Número de envío" required />
           <span class="input-group-addon icon-check"><i class="fa fa-check"></i></span>
           <span class="input-group-addon icon-remove"><i class="fa fa-remove"></i></span>
-          <button class="boton-buscador" type="submit" value="Submit">
+          <button id="searchButton" class="boton-buscador" type="submit" value="Submit" disabled>
             Buscar
           </button>
         </div>
@@ -50,6 +60,11 @@
     <div id="infonumeroAndreani">
       <!-- local para inserción de eventos -->
     </div>
+  </div>
+  
+  <!-- Agregar campos de usuario y contraseña -->
+  <div class="container mt-4">
+  
   </div>
 
   <script type="module" src="script.js"></script>

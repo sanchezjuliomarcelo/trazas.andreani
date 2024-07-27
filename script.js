@@ -1,23 +1,24 @@
-// Obtiene las variables de entorno desde Vite
-const API_USER = import.meta.env.VITE_API_USER;
-const API_PASSWORD = import.meta.env.VITE_API_PASSWORD;
-const API_URL = import.meta.env.VITE_API_URL;
+// URL de la API fija
+const API_URL = "https://apis.andreani.com";
 
-// Imprime las variables de entorno para verificar (puedes comentar estas líneas después)
-console.log("API_USER:", API_USER);
-console.log("API_PASSWORD:", API_PASSWORD);
-console.log("API_URL:", API_URL);
+// Función para obtener el valor de los campos de usuario y contraseña
+function getCredentials() {
+    const user = document.getElementById('apiUser').value;
+    const password = document.getElementById('apiPassword').value;
+    return { user, password };
+}
 
 // Función para generar el token
 async function getToken() {
+    const { user, password } = getCredentials();
+
     // Verifica si las credenciales existen
-    if (!API_USER || !API_PASSWORD) {
+    if (!user || !password) {
         console.error("Las credenciales de acceso no están configuradas.");
         return;
     }
 
-    // Codifica las credenciales en Base64
-    const credentials = btoa(`${API_USER}:${API_PASSWORD}`);
+    const credentials = btoa(`${user}:${password}`);
     const apiUrl = `${API_URL}/login`;
 
     const myHeaders = new Headers();
@@ -30,17 +31,16 @@ async function getToken() {
     };
 
     try {
-        // Realiza la solicitud para obtener el token
         const response = await fetch(apiUrl, requestOptions);
         if (!response.ok) {
             throw new Error(`Error al obtener el token: ${response.status} ${response.statusText}`);
         }
         const result = await response.json();
-        localStorage.setItem('authToken', result.token); // Almacena el token en localStorage
+        localStorage.setItem('authToken', result.token); // Almacena el token
         console.log('Token generado:', result.token); // Imprime el token
     } catch (error) {
         console.error('Error al obtener el token:', error);
-        // Muestra un mensaje de error al usuario
+        // Puedes mostrar un mensaje de error al usuario
         alert("Error al autenticarse con la API de Andreani. Verifica tus credenciales.");
     }
 }
@@ -53,7 +53,6 @@ async function fetchTrackingData(trackingNumber) {
         return;
     }
 
-    // Construye la URL de la API usando el número de seguimiento
     const apiUrl = `${API_URL}/envios/${trackingNumber}/trazas`;
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -65,15 +64,13 @@ async function fetchTrackingData(trackingNumber) {
     };
 
     try {
-        // Realiza la solicitud para obtener los datos de la traza
         const response = await fetch(apiUrl, requestOptions);
         const contentType = response.headers.get("content-type");
         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
         
-        // Verifica el tipo de contenido de la respuesta
         if (contentType && contentType.includes("application/json")) {
             const result = await response.json();
-            displayTrackingData(result); // Muestra los datos de la traza
+            displayTrackingData(result);
         } else {
             const text = await response.text();
             throw new Error(`Respuesta inesperada: ${text}`);
@@ -107,11 +104,26 @@ function displayTrackingData(data) {
     }
 }
 
+// Función para validar los campos de usuario y contraseña
+function validateFields() {
+    const user = document.getElementById('apiUser').value;
+    const password = document.getElementById('apiPassword').value;
+    const searchButton = document.getElementById('searchButton');
+    
+    // Habilita o deshabilita el botón de búsqueda
+    searchButton.disabled = !user || !password;
+}
+
+// Event listeners para validar campos
+document.getElementById('apiUser').addEventListener('input', validateFields);
+document.getElementById('apiPassword').addEventListener('input', validateFields);
+
 // Función para manejar el formulario de búsqueda
 document.getElementById("numeroAndreaniForm").addEventListener("submit", async function(event) {
     event.preventDefault();
     const trackingNumber = document.getElementById("numeroAndreani").value;
     if (trackingNumber) {
+        await getToken(); // Asegúrate de obtener el token antes de buscar la traza
         await fetchTrackingData(trackingNumber);
     } else {
         alert("Por favor, ingrese un número de seguimiento.");
@@ -120,3 +132,4 @@ document.getElementById("numeroAndreaniForm").addEventListener("submit", async f
 
 // Ejecuta la función para obtener el token cuando se cargue la página
 window.addEventListener('load', getToken);
+
