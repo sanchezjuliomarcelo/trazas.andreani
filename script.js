@@ -1,5 +1,6 @@
 // URL de la API del backend
-const BACKEND_URL = "https://trazas-andreani-git-main-sanchezjuliomarcelos-projects.vercel.app/api";
+const BACKEND_URL = "https://trazas-andreani-m2yfydkp6-sanchezjuliomarcelos-projects.vercel.app";
+
 
 // Función para obtener el valor de los campos de usuario y contraseña
 function getCredentials() {
