@@ -1,29 +1,26 @@
-// unified.js
-
 // Obtiene las variables de entorno desde Vite
 const API_USER = import.meta.env.VITE_API_USER;
 const API_PASSWORD = import.meta.env.VITE_API_PASSWORD;
 const API_URL = import.meta.env.VITE_API_URL;
 
-// Imprime las variables de entorno para verificar
+// Imprime las variables de entorno para verificar (puedes comentar estas líneas después)
 console.log("API_USER:", API_USER);
 console.log("API_PASSWORD:", API_PASSWORD);
 console.log("API_URL:", API_URL);
 
-
 // Función para generar el token
 async function getToken() {
+    // Verifica si las credenciales existen (puedes comentar esta parte después)
     if (!API_USER || !API_PASSWORD) {
         console.error("Las credenciales de acceso no están configuradas.");
         return;
     }
 
-    // Codifica las credenciales en base64 para la autenticación básica
     const credentials = btoa(`${API_USER}:${API_PASSWORD}`);
+    const apiUrl = `${API_URL}/login`;
 
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Basic ${credentials}`);
-    myHeaders.append("Cookie", "3c8ffdab67adef53a700e68f6019dc1d=46c0da942d265b8e7bb263570371139b");
 
     const requestOptions = {
         method: 'GET',
@@ -31,19 +28,18 @@ async function getToken() {
         redirect: 'follow'
     };
 
-    const apiUrl = `${API_URL}/login`;
-
     try {
-        const response = await fetch(apiUrl, requestOptions);
+        const response = await   
+ fetch(apiUrl, requestOptions);
         if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
+            throw new Error(`Error al obtener el token: ${response.status} ${response.statusText}`);
         }
         const result = await response.json();
-        console.log('Token generado:', result.token);
-        // Guarda el token para usar en la siguiente solicitud
-        localStorage.setItem('authToken', result.token);
+        localStorage.setItem('authToken', result.token); // Almacena el token
     } catch (error) {
         console.error('Error al obtener el token:', error);
+        // Puedes mostrar un mensaje de error al usuario
+        alert("Error al autenticarse con la API de Andreani. Verifica tus credenciales.");
     }
 }
 
