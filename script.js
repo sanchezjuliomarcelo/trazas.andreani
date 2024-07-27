@@ -5,6 +5,12 @@ const API_USER = import.meta.env.VITE_API_USER;
 const API_PASSWORD = import.meta.env.VITE_API_PASSWORD;
 const API_URL = import.meta.env.VITE_API_URL;
 
+// Imprime las variables de entorno para verificar
+console.log("API_USER:", API_USER);
+console.log("API_PASSWORD:", API_PASSWORD);
+console.log("API_URL:", API_URL);
+
+
 // Función para generar el token
 async function getToken() {
     if (!API_USER || !API_PASSWORD) {
