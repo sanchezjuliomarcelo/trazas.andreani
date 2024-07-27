@@ -1,0 +1,8 @@
+[build]
+  command = "vite build"
+  publish = "dist"
+
+[build.environment]
+  VITE_API_USER = "your_value"
+  VITE_API_PASSWORD = "your_value"
+  VITE_API_URL = "your_value"
