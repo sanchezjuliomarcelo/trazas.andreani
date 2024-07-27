@@ -1,11 +1,10 @@
 // URL de la API del backend
 const BACKEND_URL = "https://trazas-andreani-git-main-sanchezjuliomarcelos-projects.vercel.app/api";
 
-
 // Función para obtener el valor de los campos de usuario y contraseña
 function getCredentials() {
-    const user = document.getElementById('apiUser').value;
-    const password = document.getElementById('apiPassword').value;
+    const user = document.getElementById('apiUser').value.trim();
+    const password = document.getElementById('apiPassword').value.trim();
     return { user, password };
 }
 
@@ -97,8 +96,8 @@ function displayTrackingData(data) {
 
 // Función para validar los campos de usuario y contraseña
 function validateFields() {
-    const user = document.getElementById('apiUser').value;
-    const password = document.getElementById('apiPassword').value;
+    const user = document.getElementById('apiUser').value.trim();
+    const password = document.getElementById('apiPassword').value.trim();
     const searchButton = document.getElementById('searchButton');
     
     // Habilita o deshabilita el botón de búsqueda
@@ -112,7 +111,7 @@ document.getElementById('apiPassword').addEventListener('input', validateFields)
 // Función para manejar el formulario de búsqueda
 document.getElementById("numeroAndreaniForm").addEventListener("submit", async function(event) {
     event.preventDefault();
-    const trackingNumber = document.getElementById("numeroAndreani").value;
+    const trackingNumber = document.getElementById("numeroAndreani").value.trim();
     if (trackingNumber) {
         await getToken(); // Asegúrate de obtener el token antes de buscar la traza
         await fetchTrackingData(trackingNumber);
