@@ -29,13 +29,13 @@ async function getToken() {
     };
 
     try {
-        const response = await   
- fetch(apiUrl, requestOptions);
+        const response = await fetch(apiUrl, requestOptions);
         if (!response.ok) {
             throw new Error(`Error al obtener el token: ${response.status} ${response.statusText}`);
         }
         const result = await response.json();
         localStorage.setItem('authToken', result.token); // Almacena el token
+        console.log('Token generado:', result.token); // Imprime el token
     } catch (error) {
         console.error('Error al obtener el token:', error);
         // Puedes mostrar un mensaje de error al usuario
@@ -109,3 +109,4 @@ document.getElementById("numeroAndreaniForm").addEventListener("submit", async f
 
 // Ejecuta la función para obtener el token cuando se cargue la página
 window.addEventListener('load', getToken);
+
