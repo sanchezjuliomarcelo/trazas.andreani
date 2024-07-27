@@ -1,15 +1,13 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-require('dotenv').config();
+require('dotenv').config(); // Para manejar las variables de entorno
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Configura CORS
-app.use(cors({
-    origin: '*', // Permite todas las solicitudes, considera restringirlo a dominios específicos en producción
-}));
+// Middleware
+app.use(cors());
 app.use(express.json());
 
 // Ruta para obtener el token

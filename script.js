@@ -1,6 +1,7 @@
 // URL de la API del backend
 const BACKEND_URL = "https://trazas-andreani-git-main-sanchezjuliomarcelos-projects.vercel.app/api";
 
+
 // Función para obtener el valor de los campos de usuario y contraseña
 function getCredentials() {
     const user = document.getElementById('apiUser').value;
@@ -122,4 +123,3 @@ document.getElementById("numeroAndreaniForm").addEventListener("submit", async f
 
 // Ejecuta la función para obtener el token cuando se cargue la página
 window.addEventListener('load', getToken);
-
