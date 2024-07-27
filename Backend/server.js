@@ -10,12 +10,12 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Ruta para obtener el token (proxy para evitar CORS)
+// Proxy para la ruta de token
 app.use('/api/token', createProxyMiddleware({
     target: 'https://apis.andreani.com',
     changeOrigin: true,
     pathRewrite: {
-        '^/api/token': '/login',
+        '^/api/token': '/login', // Reescribe la URL para coincidir con el endpoint de Andreani
     },
     onProxyReq: (proxyReq, req, res) => {
         // Añade las cabeceras necesarias para la autenticación
@@ -23,12 +23,12 @@ app.use('/api/token', createProxyMiddleware({
     }
 }));
 
-// Ruta para obtener los datos de traza (proxy para evitar CORS)
+// Proxy para la ruta de trazas
 app.use('/api/envios', createProxyMiddleware({
     target: 'https://apis.andreani.com',
     changeOrigin: true,
     pathRewrite: {
-        '^/api/envios': '', // Quita el prefijo `/api/envios` al hacer la solicitud a la API de Andreani
+        '^/api/envios': '', // Reescribe la URL para coincidir con el endpoint de Andreani
     },
     onProxyReq: (proxyReq, req, res) => {
         // Añade las cabeceras necesarias para la autenticación
